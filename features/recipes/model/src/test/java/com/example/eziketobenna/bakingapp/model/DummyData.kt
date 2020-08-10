@@ -13,7 +13,8 @@ internal object DummyData {
         image = "imgurl.com",
         servings = 1,
         ingredients = listOf(ingredient),
-        steps = listOf(step)
+        steps = listOf(step),
+        isLiked = false
     )
 
     val recipeModel = RecipeModel(
@@ -22,7 +23,8 @@ internal object DummyData {
         image = "imgurl.com",
         servings = 1,
         ingredients = listOf(ingredientModel),
-        steps = listOf(stepModel)
+        steps = listOf(stepModel),
+        isLiked = false
     )
 
     val ingredient: Ingredient

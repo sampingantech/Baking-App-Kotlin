@@ -14,6 +14,11 @@ class RecipeRepositoryImpl @Inject constructor(
     private val recipeMapper: RecipeEntityMapper
 ) : RecipeRepository {
 
+    override suspend fun likeRecipe(recipeId: Int): Recipe {
+        val recipe = recipeRemote.likeRecipe(recipeId)
+        return recipeMapper.mapFromEntity(recipe)
+    }
+
     override fun fetchRecipes(): Flow<List<Recipe>> {
         return flow {
             val recipes: List<RecipeEntity> = recipeRemote.fetchRecipes()

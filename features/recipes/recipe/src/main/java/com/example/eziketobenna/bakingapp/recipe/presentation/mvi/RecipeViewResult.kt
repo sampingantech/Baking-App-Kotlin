@@ -12,6 +12,13 @@ sealed class RecipeViewResult : ViewResult {
         data class Error(val cause: Throwable) : LoadInitialResult()
     }
 
+    sealed class LikeResult : RecipeViewResult() {
+        data class Liked(val recipe: Recipe) : LikeResult()
+        object Empty : LikeResult()
+        object Loading : LikeResult()
+        data class Error(val cause: Throwable) : LikeResult()
+    }
+
     sealed class RetryFetchResult : RecipeViewResult() {
         data class Loaded(val recipes: List<Recipe>) : RetryFetchResult()
         object Loading : RetryFetchResult()

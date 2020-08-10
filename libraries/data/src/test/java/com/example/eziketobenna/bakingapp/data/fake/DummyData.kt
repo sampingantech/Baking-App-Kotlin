@@ -14,7 +14,8 @@ internal object DummyData {
         image = "imgurl.com",
         servings = 3,
         ingredients = listOf(ingredientEntity),
-        steps = listOf(stepEntity)
+        steps = listOf(stepEntity),
+        isLiked = false
     )
 
     val ingredientEntity: IngredientEntity
@@ -38,7 +39,8 @@ internal object DummyData {
         image = "imgurl.com",
         servings = 3,
         ingredients = listOf(ingredient),
-        steps = listOf(step)
+        steps = listOf(step),
+        isLiked = false
     )
 
     val ingredient: Ingredient

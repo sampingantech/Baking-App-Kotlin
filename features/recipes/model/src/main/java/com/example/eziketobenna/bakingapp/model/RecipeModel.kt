@@ -10,5 +10,6 @@ data class RecipeModel(
     val image: String,
     val servings: Int,
     val ingredients: List<IngredientModel>,
-    val steps: List<StepModel>
+    val steps: List<StepModel>,
+    val isLiked: Boolean
 ) : Parcelable

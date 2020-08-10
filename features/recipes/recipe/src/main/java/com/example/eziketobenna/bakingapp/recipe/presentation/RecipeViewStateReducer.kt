@@ -6,6 +6,7 @@ import com.example.eziketobenna.bakingapp.model.mapper.RecipeModelMapper
 import com.example.eziketobenna.bakingapp.presentation.mvi.ViewStateReducer
 import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewResult
 import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewResult.LoadInitialResult
+import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewResult.LikeResult
 import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewResult.RefreshRecipesResult
 import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewResult.RetryFetchResult
 import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewState
@@ -28,10 +29,11 @@ class RecipeViewStateReducer @Inject constructor(private val recipeModelMapper: 
                 previous
             )
             is RefreshRecipesResult -> handleRefreshRecipeResult(
-                recipeModelMapper,
-                result,
-                previous
+                    recipeModelMapper,
+                    result,
+                    previous
             )
+            is LikeResult -> handleLikeRecipeResult(recipeModelMapper, result, previous)
         }
     }
 
@@ -72,29 +74,42 @@ class RecipeViewStateReducer @Inject constructor(private val recipeModelMapper: 
     ): RecipeViewState {
         return when (retryFetchResult) {
             is RetryFetchResult.Loaded -> previous.loadedState(
-                mapper.mapToModelList(
-                    retryFetchResult.recipes
-                )
+                    mapper.mapToModelList(
+                            retryFetchResult.recipes
+                    )
             )
             is RetryFetchResult.Error -> handleErrorState(
-                previous,
-                retryFetchResult.cause.errorMessage
+                    previous,
+                    retryFetchResult.cause.errorMessage
             )
             RetryFetchResult.Loading -> previous.loadingState
             RetryFetchResult.Empty -> handleEmptyState(previous)
         }
     }
 
+    private fun handleLikeRecipeResult(
+            mapper: RecipeModelMapper,
+            state: LikeResult,
+            previous: RecipeViewState
+    ): RecipeViewState {
+        return when (state) {
+            is LikeResult.Liked -> previous.likedState(mapper.mapToModel(state.recipe))
+            LikeResult.Empty -> handleEmptyState(previous)
+            LikeResult.Loading -> previous.loadingState
+            is LikeResult.Error -> handleErrorState(previous, state.cause.errorMessage)
+        }
+    }
+
     private fun handleRefreshRecipeResult(
-        mapper: RecipeModelMapper,
-        refreshRecipesResult: RefreshRecipesResult,
-        previous: RecipeViewState
+            mapper: RecipeModelMapper,
+            refreshRecipesResult: RefreshRecipesResult,
+            previous: RecipeViewState
     ): RecipeViewState {
         return when (refreshRecipesResult) {
             is RefreshRecipesResult.Loaded -> previous.loadedState(
-                mapper.mapToModelList(
-                    refreshRecipesResult.recipes
-                )
+                    mapper.mapToModelList(
+                            refreshRecipesResult.recipes
+                    )
             )
             is RefreshRecipesResult.Error -> handleErrorState(
                 previous,
