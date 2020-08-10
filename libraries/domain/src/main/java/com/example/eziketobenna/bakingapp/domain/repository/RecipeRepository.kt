@@ -5,4 +5,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface RecipeRepository {
     fun fetchRecipes(): Flow<List<Recipe>>
+    suspend fun likeRecipe(recipeId: Int): Recipe
 }

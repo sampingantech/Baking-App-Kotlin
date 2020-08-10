@@ -6,10 +6,12 @@ import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewActi
 import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewAction.LoadInitialAction
 import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewAction.RefreshRecipesAction
 import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewAction.RetryFetchAction
+import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewAction.LikeAction
 import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewIntent
 import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewIntent.LoadInitialViewIntent
 import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewIntent.RecipeRefreshViewIntent
 import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewIntent.RetryFetchViewIntent
+import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewIntent.LikeViewIntent
 import javax.inject.Inject
 
 @FeatureScope
@@ -21,6 +23,7 @@ class RecipeViewIntentProcessor @Inject constructor() :
             LoadInitialViewIntent -> LoadInitialAction
             RetryFetchViewIntent -> RetryFetchAction
             RecipeRefreshViewIntent -> RefreshRecipesAction
+            is LikeViewIntent -> LikeAction(intent.recipeId)
         }
     }
 }
