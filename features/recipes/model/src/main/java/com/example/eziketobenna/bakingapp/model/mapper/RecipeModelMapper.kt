@@ -17,7 +17,8 @@ class RecipeModelMapper @Inject constructor(
             domain.image,
             domain.servings,
             ingredientModelMapper.mapToModelList(domain.ingredients),
-            stepModelMapper.mapToModelList(domain.steps)
+            stepModelMapper.mapToModelList(domain.steps),
+            domain.isLiked
         )
     }
 
@@ -28,7 +29,8 @@ class RecipeModelMapper @Inject constructor(
                 model.image,
                 model.servings,
                 ingredientModelMapper.mapToDomainList(model.ingredients),
-                stepModelMapper.mapToDomainList(model.steps)
+                stepModelMapper.mapToDomainList(model.steps),
+                model.isLiked
         )
     }
 }

@@ -6,5 +6,6 @@ data class RecipeRemoteModel(
     val image: String,
     val servings: Int,
     val ingredients: List<IngredientRemoteModel>,
-    val steps: List<StepRemoteModel>
+    val steps: List<StepRemoteModel>,
+    val isLiked: Boolean
 )

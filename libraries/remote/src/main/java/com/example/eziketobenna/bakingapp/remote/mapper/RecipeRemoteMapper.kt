@@ -17,7 +17,8 @@ class RecipeRemoteMapper @Inject constructor(
                 model.image,
                 model.servings,
                 ingredientRemoteMapper.mapModelList(model.ingredients),
-                stepRemoteMapper.mapModelList(model.steps)
+                stepRemoteMapper.mapModelList(model.steps),
+                model.isLiked
         )
     }
 }

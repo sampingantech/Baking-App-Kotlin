@@ -1,6 +1,7 @@
 package com.example.eziketobenna.bakingapp.recipe
 
 import com.example.eziketobenna.bakingapp.core.ext.safeOffer
+import com.example.eziketobenna.bakingapp.recipe.ui.RecipeAdapter
 import com.example.eziketobenna.bakingapp.views.SimpleEmptyStateView
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -10,12 +11,21 @@ import kotlinx.coroutines.flow.debounce
 
 //region FlowBinding extensions
 val SimpleEmptyStateView.clicks: Flow<Unit>
-    get() = callbackFlow<Unit> {
+    get() = callbackFlow {
         val listener: () -> Unit = {
             safeOffer(Unit)
             Unit
         }
         buttonClickListener = listener
         awaitClose { buttonClickListener = null }
+    }.conflate().debounce(200)
+
+val RecipeAdapter.like: Flow<Int>
+    get() = callbackFlow {
+        val listener: (Int) -> Unit = { recipeId ->
+            safeOffer(recipeId)
+        }
+        likeListener = listener
+        awaitClose { likeListener = null }
     }.conflate().debounce(200)
 //endregion

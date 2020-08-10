@@ -6,5 +6,6 @@ data class RecipeEntity(
     val image: String,
     val servings: Int,
     val ingredients: List<IngredientEntity>,
-    val steps: List<StepEntity>
+    val steps: List<StepEntity>,
+    val isLiked: Boolean
 )
