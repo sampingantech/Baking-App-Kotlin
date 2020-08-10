@@ -73,7 +73,7 @@ class RecipeRemoteMapperTest {
 
     @Test
     fun `check id is mapped correctly`() = testData { recipeEntity, model ->
-        assertThat(recipeEntity.id).isEqualTo(model.id)
+        assertThat(recipeEntity.id).isEqualTo(model.id.toIntOrNull() ?: 0)
     }
 
     private fun testData(action: (RecipeEntity, RecipeRemoteModel) -> Unit) {

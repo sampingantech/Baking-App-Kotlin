@@ -7,7 +7,7 @@ import com.example.eziketobenna.bakingapp.remote.model.StepRemoteModel
 internal object DummyData {
     val recipeRemoteModel: RecipeRemoteModel
         get() = RecipeRemoteModel(
-            id = 1,
+            id = "1",
             name = "Eba",
             image = "some url",
             servings = 3,
