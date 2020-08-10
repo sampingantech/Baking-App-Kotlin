@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.debounce
 
 val IngredientStepAdapter.stepClicks: Flow<StepDetailItem>
-    get() = callbackFlow {
+    get() = callbackFlow<StepDetailItem> {
         val listener: StepClickListener = { step: StepDetailItem ->
             safeOffer(step)
             Unit

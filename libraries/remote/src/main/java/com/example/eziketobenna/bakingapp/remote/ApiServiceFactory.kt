@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
 
 object ApiServiceFactory {
 
-    private const val BASE_URL: String = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/"
+    private const val BASE_URL: String = "https://5f06b682ee44800016d3902b.mockapi.io/"
 
     fun makeAPiService(isDebug: Boolean, moshi: Moshi): ApiService {
         val okHttpClient: OkHttpClient = makeOkHttpClient(
