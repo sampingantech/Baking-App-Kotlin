@@ -3,6 +3,7 @@ package com.example.eziketobenna.bakingapp.recipe.ui
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -14,11 +15,13 @@ import com.example.eziketobenna.bakingapp.navigation.NavigationDispatcher
 import com.example.eziketobenna.bakingapp.presentation.mvi.MVIView
 import com.example.eziketobenna.bakingapp.recipe.R
 import com.example.eziketobenna.bakingapp.recipe.clicks
+import com.example.eziketobenna.bakingapp.recipe.like
 import com.example.eziketobenna.bakingapp.recipe.databinding.FragmentRecipeBinding
 import com.example.eziketobenna.bakingapp.recipe.di.inject
 import com.example.eziketobenna.bakingapp.recipe.presentation.RecipeViewModel
 import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewIntent
 import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewIntent.RecipeRefreshViewIntent
+import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewIntent.LikeViewIntent
 import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewIntent.RetryFetchViewIntent
 import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewState
 import com.google.android.material.snackbar.Snackbar
@@ -71,8 +74,11 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe),
     private val swipeRefreshIntent: Flow<RecipeRefreshViewIntent>
         get() = binding.swipeRefresh.refreshes().map { RecipeRefreshViewIntent }
 
+    private val likeIntent: Flow<LikeViewIntent>
+        get() = recipeAdapter.like.map { recipeId -> LikeViewIntent(recipeId) }
+
     override val intents: Flow<RecipeViewIntent>
-        get() = merge(swipeRefreshIntent, emptyStateIntent)
+        get() = merge(swipeRefreshIntent, emptyStateIntent, likeIntent)
 
     override fun render(state: RecipeViewState) {
         when {
@@ -81,7 +87,21 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe),
             state.isNoDataError -> binding.renderNoDataErrorState(state)
             state.isLoading -> binding.renderLoadingState()
             state.isRefreshing -> binding.renderRefreshState()
+            state.liked -> binding.renderLikeState(state)
             else -> binding.renderSuccessState(state)
+        }
+    }
+
+    private fun FragmentRecipeBinding.renderLikeState(state: RecipeViewState) {
+        val recipe = state.recipe
+
+        if (recipe != null) {
+            recipeAdapter.submitList(state.recipes)
+            stopShimmer()
+            swipeRefresh.isRefreshing = false
+            swipeRefresh.isEnabled = true
+            emptyState.isVisible = false
+            Toast.makeText(root.context, if (recipe.isLiked) "${recipe.name} Liked!" else "Unliked!", Toast.LENGTH_SHORT).show()
         }
     }
 

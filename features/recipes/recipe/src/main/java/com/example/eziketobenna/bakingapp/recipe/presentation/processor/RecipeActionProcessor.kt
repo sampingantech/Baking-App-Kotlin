@@ -3,13 +3,16 @@ package com.example.eziketobenna.bakingapp.recipe.presentation.processor
 import com.example.eziketobenna.bakingapp.core.di.scope.FeatureScope
 import com.example.eziketobenna.bakingapp.domain.model.Recipe
 import com.example.eziketobenna.bakingapp.domain.usecase.FetchRecipes
+import com.example.eziketobenna.bakingapp.domain.usecase.LikeRecipe
 import com.example.eziketobenna.bakingapp.presentation.mvi.ActionProcessor
 import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewAction
 import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewAction.LoadInitialAction
+import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewAction.LikeAction
 import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewAction.RefreshRecipesAction
 import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewAction.RetryFetchAction
 import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewResult
 import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewResult.LoadInitialResult
+import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewResult.LikeResult
 import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewResult.RefreshRecipesResult
 import com.example.eziketobenna.bakingapp.recipe.presentation.mvi.RecipeViewResult.RetryFetchResult
 import javax.inject.Inject
@@ -20,8 +23,11 @@ import kotlinx.coroutines.flow.onStart
 
 @FeatureScope
 class RecipeActionProcessor @Inject constructor(
-    private val fetchRecipesUseCase: FetchRecipes
+        private val fetchRecipesUseCase: FetchRecipes,
+        private val likeRecipeUseCase: LikeRecipe
 ) : ActionProcessor<RecipeViewAction, RecipeViewResult> {
+
+    private fun likes(recipeId: Int): Flow<Recipe> = likeRecipeUseCase(recipeId)
 
     private val recipes: Flow<List<Recipe>>
         get() = fetchRecipesUseCase()
@@ -29,6 +35,7 @@ class RecipeActionProcessor @Inject constructor(
     override fun actionToResult(viewAction: RecipeViewAction): Flow<RecipeViewResult> {
         return when (viewAction) {
             LoadInitialAction -> loadRecipes
+            is LikeAction -> likeRecipe(viewAction.recipeId)
             RetryFetchAction -> retryFetch
             RefreshRecipesAction -> refreshData
         }
@@ -59,6 +66,17 @@ class RecipeActionProcessor @Inject constructor(
         }.catch { cause: Throwable ->
             emit(RetryFetchResult.Error(cause))
         }
+
+    private fun likeRecipe(recipeId: Int): Flow<RecipeViewResult> = likes(recipeId)
+            .map {
+                LikeResult.Liked(it)
+            }
+            .onStart<LikeResult> {
+                emit(LikeResult.Loading)
+            }
+            .catch { cause: Throwable ->
+                emit(LikeResult.Error(cause))
+            }
 
     private val loadRecipes: Flow<RecipeViewResult>
         get() = recipes.map { recipes ->
