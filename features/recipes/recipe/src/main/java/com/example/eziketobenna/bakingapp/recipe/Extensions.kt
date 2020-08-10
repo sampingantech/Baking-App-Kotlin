@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.debounce
 
 //region FlowBinding extensions
 val SimpleEmptyStateView.clicks: Flow<Unit>
-    get() = callbackFlow {
+    get() = callbackFlow<Unit> {
         val listener: () -> Unit = {
             safeOffer(Unit)
             Unit
