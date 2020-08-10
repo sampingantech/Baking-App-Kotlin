@@ -16,7 +16,8 @@ internal object DummyData {
         image = "imgurl.com",
         servings = 1,
         ingredients = listOf(ingredient),
-        steps = listOf(step)
+        steps = listOf(step),
+        isLiked = false
     )
 
     private val ingredient: Ingredient

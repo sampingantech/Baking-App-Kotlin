@@ -6,5 +6,6 @@ data class Recipe(
     val image: String,
     val servings: Int,
     val ingredients: List<Ingredient>,
-    val steps: List<Step>
+    val steps: List<Step>,
+    val isLiked: Boolean
 )

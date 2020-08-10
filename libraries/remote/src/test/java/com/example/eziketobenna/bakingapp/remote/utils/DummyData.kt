@@ -12,7 +12,8 @@ internal object DummyData {
             image = "some url",
             servings = 3,
             ingredients = listOf(ingredientRemoteModel),
-            steps = listOf(stepRemoteModel)
+            steps = listOf(stepRemoteModel),
+            isLiked = false
         )
 
     val ingredientRemoteModel: IngredientRemoteModel
